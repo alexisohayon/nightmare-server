@@ -7,8 +7,10 @@ RUN /usr/bin/curl -sL https://deb.nodesource.com/setup_6.x | /bin/bash && \
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -y nodejs
 
 WORKDIR /opt/nightmare-server
-COPY . .
+COPY ./package.json ./package.json
 RUN /usr/bin/npm install
+
+COPY . .
 
 CMD /usr/bin/xvfb-run ./server.js
 EXPOSE 3000
