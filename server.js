@@ -96,7 +96,7 @@ function dispatchNext() {
       } else {
         // Wrap it up as a raw nightmare script
         script = (function (driver) {
-          userScript(driver.nightmare());
+          return userScript(driver.nightmare());
         });
       }
 
@@ -126,4 +126,3 @@ function dispatchNext() {
   }
 
 }
-

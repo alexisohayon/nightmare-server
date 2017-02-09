@@ -1,7 +1,7 @@
 nightmare-server
 ================
 
-A PoC which exposes [nightmare.js](https://github.com/segmentio/nightmare) 
+A PoC which exposes [nightmare.js](https://github.com/segmentio/nightmare)
 over HTTP.
 
 Note that only one browsing request is served at a time. There is a
@@ -56,11 +56,16 @@ http://echo.dirkraft.com?echoFormat=application/json and returns the
 contents of the `<pre>` element there.
 
     curl "${nmserver}/nightmare" -d '(function(nightmare){
-        nightmare.goto("http://echo.dirkraft.com?echoFormat=application/json")
-            .inject("js", "node_modules/jquery/dist/jquery.min.js")
-            .evaluate(function() {
-                return $("pre").text();
-            })
+        return new Promise(function(resolve, reject) {
+            nightmare.goto("http://echo.dirkraft.com?echoFormat=application/json")
+                .inject("js", "node_modules/jquery/dist/jquery.min.js")
+                .evaluate(function() {
+                    return $("pre").text();
+                })
+                .then(function(text) {
+                    resolve(text)
+                })
+        })
     })'
 
 
@@ -92,11 +97,11 @@ Whether using nightmare or driver scripts, the request can specify a
 template to use in place of an explicitly provided script in the request
 body.
 
-This example opens a wikipedia page and returns the first article thumbnail 
-image url. Instead of including the entire driver script in the request 
-body, this request references a script bundled into nightmare-server and 
-passes the formatter arguments which it requires. The bundled 
-[wikipedia.firstimage](templates/wikipedia.firstimage.js) 
+This example opens a wikipedia page and returns the first article thumbnail
+image url. Instead of including the entire driver script in the request
+body, this request references a script bundled into nightmare-server and
+passes the formatter arguments which it requires. The bundled
+[wikipedia.firstimage](templates/wikipedia.firstimage.js)
 driver script requires only one formatter argument: **url**.
 
     curl "${nmserver}/driver?template=wikipedia.firstimage&url=https://en.wikipedia.org/wiki/Microlophus_albemarlensis"
@@ -158,22 +163,22 @@ Let me count the ways
 The MIT License (MIT)
 Copyright (c) 2016 Jason Dunkelberger (a.k.a. "dirkraft")
 
-Permission is hereby granted, free of charge, to any person obtaining a 
-copy of this software and associated documentation files (the 
-"Software"), to deal in the Software without restriction, including 
-without limitation the rights to use, copy, modify, merge, publish, 
-distribute, sublicense, and/or sell copies of the Software, and to 
-permit persons to whom the Software is furnished to do so, subject to 
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
 
-The above copyright notice and this permission notice shall be included 
+The above copyright notice and this permission notice shall be included
 in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```

@@ -7,6 +7,7 @@ function Driver(reqId, n) {
   _.reset = reset;
   _.runDriverScript = runDriverScript;
   _.finish = finish;
+  _.promise = null;
 
   function reset() {
     console.log(reqId, 'server.reset');
@@ -15,13 +16,13 @@ function Driver(reqId, n) {
 
   function runDriverScript(driverScript) {
     console.log(reqId, 'server.runDriverScript');
-    driverScript(_);
+    _.promise = driverScript(_);
     return _;
   }
 
   function finish(serverFn) {
     console.log(reqId, 'server.finish');
-    n.then(function (result) {
+    _.promise.then(function (result) {
       serverFn(200, result);
     }).catch(function (error) {
       serverFn(500, error);
