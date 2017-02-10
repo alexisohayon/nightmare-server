@@ -15,23 +15,24 @@ metrics per docker container correspond 1-1 with nightmare performance.
 
 ### Docker Usage ###
 
-[test running]
-docker run --rm -t -p8300:3000 -i --name nightmare kurebio/nightmare-server
-curl "http://localhost:8300/nightmare" -d '(function(nightmare){
-  return new Promise(function(resolve, reject) {
-    console.log("request start")
-    nightmare.goto("http://echo.dirkraft.com?echoFormat=application/json")
-      .inject("js", "node_modules/jquery/dist/jquery.min.js")
-      .evaluate(() => 
-        new Promise((resolve, reject) => 
-          setTimeout(() => resolve($("pre").text()), 2000)
-        )
-      )
-      .then(function(text) {
-        resolve(text)
+test running
+
+    docker run --rm -t -p8300:3000 -i --name nightmare kurebio/nightmare-server
+    curl "http://localhost:8300/nightmare" -d '(function(nightmare){
+      return new Promise(function(resolve, reject) {
+        console.log("request start")
+        nightmare.goto("http://echo.dirkraft.com?echoFormat=application/json")
+          .inject("js", "node_modules/jquery/dist/jquery.min.js")
+          .evaluate(() =>
+            new Promise((resolve, reject) =>
+              setTimeout(() => resolve($("pre").text()), 2000)
+            )
+          )
+          .then(function(text) {
+            resolve(text)
+          })
       })
-  })
-})'
+    })'
 
 
 If you aren't familiar with docker (I wasn't when I did this),
