@@ -21,11 +21,12 @@ function Driver(reqId, n) {
   }
 
   function finish(serverFn) {
-    console.log(reqId, 'server.finish');
     _.promise.then(function (result) {
       serverFn(200, result);
     }).catch(function (error) {
       serverFn(500, error);
+    }).then(function () {
+      console.log(reqId, 'server.finish');
     });
     return _;
   }
