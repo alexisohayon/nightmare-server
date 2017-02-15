@@ -107,3 +107,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# VSCode
+.vscode/*
+.history/*
