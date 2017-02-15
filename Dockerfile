@@ -15,5 +15,5 @@ RUN npm install
 
 COPY . .
 
-CMD /usr/bin/xvfb-run ./server.js
+CMD /usr/bin/xvfb-run node --harmony-async-await ./server.js
 EXPOSE 3000
