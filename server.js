@@ -26,6 +26,7 @@ app.listen(3000, function () {
 
 
 function handleExpressReq(req, res) {
+  req.setTimeout(0)
   queue.push({req: req, res: res});
   dispatchNext();
 }
