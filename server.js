@@ -6,7 +6,8 @@ var express = require('express'),
     sprintf = require('sprintf'),
     _ = require('lodash'),
     Nightmare = require('nightmare'),
-    nightmare = new Nightmare({show: false}),
+    nightmareOpts = {show: false},
+    nightmare = new Nightmare(nightmareOpts),
     Driver = require('./driver').Driver;
 
 app.use(bodyParser.text({type: "*/*"}));
@@ -100,6 +101,10 @@ function dispatchNext() {
         });
       }
 
+      if(nightmare.ended || nightmare.ending) {
+        nightmare = new Nightmare(nightmareOpts)
+      }
+
       new Driver(reqId, nightmare)
           .reset()
           .runDriverScript(script)
@@ -108,7 +113,17 @@ function dispatchNext() {
             res.end();
             dispatching = false;
             console.log(reqId, 'Finished positive response. Queue:', queue.length, 'Dispatching:', dispatching);
-            dispatchNext();
+
+            if(!nightmare.ended || !nightmare.ending) {
+              nightmare.end().then(() => dispatchNext()).catch((e) => {
+                console.log('nightmare.end() error')
+                console.log(e)
+                nightmare = new Nightmare(nightmareOpts)
+                dispatchNext()
+              })
+            } else {
+              dispatchNext()
+            }
           });
 
     } catch (e) {
