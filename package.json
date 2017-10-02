@@ -13,6 +13,7 @@
     "jquery": "2.2.3",
     "lodash": "4.12.0",
     "nightmare": "2.9.1",
+    "node-fetch": "^1.7.3",
     "sprintf": "0.1.5"
   },
   "devDependencies": {},
